@@ -28,6 +28,8 @@ def load_user(userid):
 login.login_view = 'login'
 login.login_message = "Please log in"
 
+print "Initialized..."
+
 #Flask commands
 @app.route('/')
 def index():
