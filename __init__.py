@@ -6,7 +6,7 @@ from flask.ext.login import LoginManager
 from formatBook import formatplaintext, formatcomments
 import json
 
-
+print "Started..."
 
 app = Flask(__name__)
 login = LoginManager(app)
