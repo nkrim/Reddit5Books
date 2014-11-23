@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reddit5Books - {{title}}</title>
+<script src="jquery-1.11.1.js"></script>
+<script type="text/javascript">
+var height=-1;
+var commentlength=-1;
+var previousviewed=-1;
+function filterunsorted(curpos) {
+	var topline=curpos*200/height;
+	var botline=($(window).height()+curpos)*200/height;
+	var string="";
+	for (i=0; i<commentlength; i++) {
+		if ($( "#line"+i).is(":visible") {
+		//if (comments[i].en>=topline && comments[i].st<=botline) {
+			string=string+"<div id=\"comment"+i+"\">"+subjectline(i)+"</div>\n";
+			//addclickhandler(i);
+		}
+
+	}
+	$("#comments").html(string);
+}
+function highlight(number) {
+	for (i=comments[number].st; i<=comments[number].en; i++) {
+		$("#line"+i).attr("style", "background-color:yellow");
+	}
+}
+function unhighlight(number) {
+	for (i=comments[number].st; i<=comments[number].en; i++) {
+		$("#line"+i).attr("style", "");
+	}
+}
+function subjectline(number) {
+	return ("Lines "+comments[number].st+"-"+comments[number].en+":\t"+comments[number].subject);
+}
+function showtext(number) {
+	console.log("#comment"+number);
+	$( "#comment"+number).html(subjectline(number)+"<br>"+comments[number].text);
+}
+function hidetext(number) {
+	$( "#comment"+number).html(subjectline(number));
+}
+function addclickhandler(number) {
+	console.log("adding click handler "+number);
+	$( "#comments" ).on("click","#comment"+number, function() {
+		console.log("here"+number);
+		//console.log(previouslyviewed+" "+number);
+		if (previousviewed==number) {
+			unhighlight(previousviewed);
+			previousviewed=-1;
+			hidetext(number);
+		}
+		else {
+			highlight(number);
+			previousviewed=number;
+			showtext(number);
+		}
+
+
+
+	});
+}
+$( document ).ready(function() {
+    console.log( "ready!" );
+
+    $( "#text" ).on("scroll", function() {
+		var curpos=$("#text").scrollTop();
+		//need to filter the data
+		filterunsorted(curpos);
+		
+		//console.log(botline);
+		console.log(curpos);
+	});
+	for (i=0;i<commentlength; i++) {
+		addclickhandler(i);
+	}
+
+	$("#comments").on("click", function() {
+		console.log('clicked comments');
+	})
+	height=$("#textholder").height();
+	filterunsorted(0);
+	//addclickhandler(0);
+	//$("#comment0").on("click", function() {
+	//	console.log('wtf');
+	//});
+	console.log(height);
+	console.log($(window).height());
+});
+var comments = new Array();
+function Comment (st,en,subject,text) {
+    this.st = st;
+    this.en = en;
+    this.text = text;
+    this.subject=subject;
+}
+//{%comments%}
+//comments[0]=new Comment(5,10,"lolz omg first post", "hi every1 im new!!!!!!! holds up spork my name is katy but u can call me t3h PeNgU1N oF d00m!!!!!!!! lol…as u can see im very random!!!! thats why i came here, 2 meet random ppl like me _… im 13 years old (im mature 4 my age tho!!) i like 2 watch invader zim w/ my girlfreind (im bi if u dont like it deal w/it) its our favorite tv show!!! bcuz its SOOOO random!!!! shes random 2 of course but i want 2 meet more random ppl =) like they say the more the merrier!!!! lol…neways i hope 2 make alot of freinds here so give me lots of commentses!!!! DOOOOOMMMM!!!!!!!!!!!!!!!! <--- me bein random again _^ hehe…toodles!!!!!love and waffles,t3h PeNgU1N oF d00m");
+//assuming comments do not come sorted
+{% for n in list %}
+comments[{{n}}]=new Comment({{comments[n].st}},{{comments[n].en}},"{{comments[n].subject}}","{{comments[n].contents}}");
+{% endfor %}
+//comments[0]=new Comment(0,5,"lolz omg first post", "filler");
+/*comments[1]=new Comment(0,3,"This is comment number 1");
+comments[2]=new Comment(0,4,"This is comment number 2");
+comments[3]=new Comment(0,3,"This is comment number 3");
+comments[4]=new Comment(1,2,"This is comment number 4");
+comments[5]=new Comment(1,3,"This is comment number 5");
+comments[6]=new Comment(3,7,"This is comment number 6");
+comments[7]=new Comment(5,9,"This is comment number 7");
+comments[8]=new Comment(6,8,"This is comment number 8");
+comments[9]=new Comment(8,11,"This is comment number 9");
+comments[10]=new Comment(8,11,"This is comment number 10");
+comments[11]=new Comment(8,11,"This is comment number 11");
+comments[12]=new Comment(9,10,"This is comment number 12");
+comments[13]=new Comment(11,13,"This is comment number 13");
+comments[14]=new Comment(13,16,"This is comment number 14");
+comments[15]=new Comment(13,16,"This is comment number 15");
+comments[16]=new Comment(15,18,"This is comment number 16");
+comments[17]=new Comment(15,19,"This is comment number 17");
+comments[18]=new Comment(16,17,"This is comment number 18");
+comments[19]=new Comment(16,19,"This is comment number 19");
+comments[20]=new Comment(16,20,"This is comment number 20");
+comments[21]=new Comment(16,19,"This is comment number 21");
+comments[22]=new Comment(17,18,"This is comment number 22");
+comments[23]=new Comment(18,20,"This is comment number 23");
+comments[24]=new Comment(20,21,"This is comment number 24");
+comments[25]=new Comment(20,23,"This is comment number 25");
+comments[26]=new Comment(22,24,"This is comment number 26");
+comments[27]=new Comment(24,28,"This is comment number 27");
+comments[28]=new Comment(26,29,"This is comment number 28");
+comments[29]=new Comment(26,30,"This is comment number 29");
+comments[30]=new Comment(28,31,"This is comment number 30");
+comments[31]=new Comment(29,33,"This is comment number 31");
+comments[32]=new Comment(31,35,"This is comment number 32");
+comments[33]=new Comment(31,35,"This is comment number 33");
+comments[34]=new Comment(32,33,"This is comment number 34");
+comments[35]=new Comment(32,35,"This is comment number 35");
+comments[36]=new Comment(33,35,"This is comment number 36");
+comments[37]=new Comment(33,37,"This is comment number 37");
+comments[38]=new Comment(34,38,"This is comment number 38");
+comments[39]=new Comment(35,38,"This is comment number 39");
+comments[40]=new Comment(35,38,"This is comment number 40");
+comments[41]=new Comment(35,38,"This is comment number 41");
+comments[42]=new Comment(36,37,"This is comment number 42");
+comments[43]=new Comment(37,39,"This is comment number 43");
+comments[44]=new Comment(39,43,"This is comment number 44");
+comments[45]=new Comment(40,42,"This is comment number 45");
+comments[46]=new Comment(41,44,"This is comment number 46");
+comments[47]=new Comment(41,42,"This is comment number 47");
+comments[48]=new Comment(42,44,"This is comment number 48");
+comments[49]=new Comment(42,45,"This is comment number 49");
+comments[50]=new Comment(44,47,"This is comment number 50");
+comments[51]=new Comment(44,47,"This is comment number 51");
+comments[52]=new Comment(44,45,"This is comment number 52");
+comments[53]=new Comment(45,46,"This is comment number 53");
+comments[54]=new Comment(45,49,"This is comment number 54");
+comments[55]=new Comment(47,50,"This is comment number 55");
+comments[56]=new Comment(48,50,"This is comment number 56");
+comments[57]=new Comment(48,51,"This is comment number 57");
+comments[58]=new Comment(48,52,"This is comment number 58");
+comments[59]=new Comment(50,51,"This is comment number 59");
+comments[60]=new Comment(50,53,"This is comment number 60");
+comments[61]=new Comment(52,54,"This is comment number 61");
+comments[62]=new Comment(53,56,"This is comment number 62");
+comments[63]=new Comment(55,56,"This is comment number 63");
+comments[64]=new Comment(56,57,"This is comment number 64");
+comments[65]=new Comment(57,60,"This is comment number 65");
+comments[66]=new Comment(59,60,"This is comment number 66");
+comments[67]=new Comment(59,62,"This is comment number 67");
+comments[68]=new Comment(59,63,"This is comment number 68");
+comments[69]=new Comment(61,63,"This is comment number 69");
+comments[70]=new Comment(62,66,"This is comment number 70");
+comments[71]=new Comment(62,63,"This is comment number 71");
+comments[72]=new Comment(64,67,"This is comment number 72");
+comments[73]=new Comment(65,69,"This is comment number 73");
+comments[74]=new Comment(67,70,"This is comment number 74");
+comments[75]=new Comment(69,71,"This is comment number 75");
+comments[76]=new Comment(70,71,"This is comment number 76");
+comments[77]=new Comment(71,74,"This is comment number 77");
+comments[78]=new Comment(72,74,"This is comment number 78");
+comments[79]=new Comment(72,75,"This is comment number 79");
+comments[80]=new Comment(74,76,"This is comment number 80");
+comments[81]=new Comment(75,77,"This is comment number 81");
+comments[82]=new Comment(76,80,"This is comment number 82");
+comments[83]=new Comment(78,80,"This is comment number 83");
+comments[84]=new Comment(79,80,"This is comment number 84");
+comments[85]=new Comment(80,84,"This is comment number 85");
+comments[86]=new Comment(81,82,"This is comment number 86");
+comments[87]=new Comment(81,82,"This is comment number 87");
+comments[88]=new Comment(82,86,"This is comment number 88");
+comments[89]=new Comment(82,83,"This is comment number 89");
+comments[90]=new Comment(84,87,"This is comment number 90");
+comments[91]=new Comment(85,87,"This is comment number 91");
+comments[92]=new Comment(85,86,"This is comment number 92");
+comments[93]=new Comment(86,87,"This is comment number 93");
+comments[94]=new Comment(87,91,"This is comment number 94");
+comments[95]=new Comment(88,91,"This is comment number 95");
+comments[96]=new Comment(88,90,"This is comment number 96");
+comments[97]=new Comment(89,93,"This is comment number 97");
+comments[98]=new Comment(91,94,"This is comment number 98");
+comments[99]=new Comment(93,94,"This is comment number 99");
+comments[100]=new Comment(94,95,"This is comment number 100");
+comments[101]=new Comment(94,95,"This is comment number 101");
+comments[102]=new Comment(96,98,"This is comment number 102");
+comments[103]=new Comment(98,102,"This is comment number 103");
+comments[104]=new Comment(98,99,"This is comment number 104");
+comments[105]=new Comment(100,102,"This is comment number 105");
+comments[106]=new Comment(100,102,"This is comment number 106");
+comments[107]=new Comment(101,105,"This is comment number 107");
+comments[108]=new Comment(101,105,"This is comment number 108");
+comments[109]=new Comment(102,105,"This is comment number 109");
+comments[110]=new Comment(102,104,"This is comment number 110");
+comments[111]=new Comment(104,105,"This is comment number 111");
+comments[112]=new Comment(104,108,"This is comment number 112");
+comments[113]=new Comment(104,107,"This is comment number 113");
+comments[114]=new Comment(106,107,"This is comment number 114");
+comments[115]=new Comment(108,111,"This is comment number 115");
+comments[116]=new Comment(110,111,"This is comment number 116");
+comments[117]=new Comment(111,114,"This is comment number 117");
+comments[118]=new Comment(111,112,"This is comment number 118");
+comments[119]=new Comment(111,113,"This is comment number 119");
+comments[120]=new Comment(112,113,"This is comment number 120");
+comments[121]=new Comment(114,115,"This is comment number 121");
+comments[122]=new Comment(116,118,"This is comment number 122");
+comments[123]=new Comment(118,119,"This is comment number 123");
+comments[124]=new Comment(119,122,"This is comment number 124");
+comments[125]=new Comment(119,121,"This is comment number 125");
+comments[126]=new Comment(119,122,"This is comment number 126");
+comments[127]=new Comment(121,124,"This is comment number 127");
+comments[128]=new Comment(122,123,"This is comment number 128");
+comments[129]=new Comment(124,128,"This is comment number 129");
+comments[130]=new Comment(126,130,"This is comment number 130");
+comments[131]=new Comment(127,130,"This is comment number 131");
+comments[132]=new Comment(129,130,"This is comment number 132");
+comments[133]=new Comment(130,131,"This is comment number 133");
+comments[134]=new Comment(131,132,"This is comment number 134");
+comments[135]=new Comment(132,134,"This is comment number 135");
+comments[136]=new Comment(132,135,"This is comment number 136");
+comments[137]=new Comment(134,137,"This is comment number 137");
+comments[138]=new Comment(134,136,"This is comment number 138");
+comments[139]=new Comment(136,139,"This is comment number 139");
+comments[140]=new Comment(136,140,"This is comment number 140");
+comments[141]=new Comment(136,137,"This is comment number 141");
+comments[142]=new Comment(136,140,"This is comment number 142");
+comments[143]=new Comment(136,137,"This is comment number 143");
+comments[144]=new Comment(136,138,"This is comment number 144");
+comments[145]=new Comment(138,141,"This is comment number 145");
+comments[146]=new Comment(140,143,"This is comment number 146");
+comments[147]=new Comment(141,145,"This is comment number 147");
+comments[148]=new Comment(142,144,"This is comment number 148");
+comments[149]=new Comment(144,146,"This is comment number 149");
+comments[150]=new Comment(144,146,"This is comment number 150");
+comments[151]=new Comment(144,145,"This is comment number 151");
+comments[152]=new Comment(146,149,"This is comment number 152");
+comments[153]=new Comment(147,150,"This is comment number 153");
+comments[154]=new Comment(149,153,"This is comment number 154");
+comments[155]=new Comment(151,153,"This is comment number 155");
+comments[156]=new Comment(151,155,"This is comment number 156");
+comments[157]=new Comment(151,152,"This is comment number 157");
+comments[158]=new Comment(152,153,"This is comment number 158");
+comments[159]=new Comment(153,156,"This is comment number 159");
+comments[160]=new Comment(155,156,"This is comment number 160");
+comments[161]=new Comment(155,159,"This is comment number 161");
+comments[162]=new Comment(155,157,"This is comment number 162");
+comments[163]=new Comment(157,160,"This is comment number 163");
+comments[164]=new Comment(159,161,"This is comment number 164");
+comments[165]=new Comment(161,162,"This is comment number 165");
+comments[166]=new Comment(161,165,"This is comment number 166");
+comments[167]=new Comment(163,164,"This is comment number 167");
+comments[168]=new Comment(163,166,"This is comment number 168");
+comments[169]=new Comment(163,165,"This is comment number 169");
+comments[170]=new Comment(163,164,"This is comment number 170");
+comments[171]=new Comment(163,165,"This is comment number 171");
+comments[172]=new Comment(165,169,"This is comment number 172");
+comments[173]=new Comment(167,168,"This is comment number 173");
+comments[174]=new Comment(168,172,"This is comment number 174");
+comments[175]=new Comment(170,173,"This is comment number 175");
+comments[176]=new Comment(171,172,"This is comment number 176");
+comments[177]=new Comment(173,176,"This is comment number 177");
+comments[178]=new Comment(174,178,"This is comment number 178");
+comments[179]=new Comment(174,176,"This is comment number 179");
+comments[180]=new Comment(174,176,"This is comment number 180");
+comments[181]=new Comment(174,178,"This is comment number 181");
+comments[182]=new Comment(175,177,"This is comment number 182");
+comments[183]=new Comment(177,180,"This is comment number 183");
+comments[184]=new Comment(177,179,"This is comment number 184");
+comments[185]=new Comment(177,181,"This is comment number 185");
+comments[186]=new Comment(178,182,"This is comment number 186");
+comments[187]=new Comment(180,181,"This is comment number 187");
+comments[188]=new Comment(181,184,"This is comment number 188");
+comments[189]=new Comment(183,186,"This is comment number 189");
+comments[190]=new Comment(185,187,"This is comment number 190");
+comments[191]=new Comment(185,189,"This is comment number 191");
+comments[192]=new Comment(185,186,"This is comment number 192");
+comments[193]=new Comment(186,188,"This is comment number 193");
+comments[194]=new Comment(187,189,"This is comment number 194");
+comments[195]=new Comment(189,193,"This is comment number 195");
+comments[196]=new Comment(189,192,"This is comment number 196");
+comments[197]=new Comment(191,192,"This is comment number 197");
+comments[198]=new Comment(193,197,"This is comment number 198");
+comments[199]=new Comment(194,195,"This is comment number 199");
+comments[200]=new Comment(195,196,"This is comment number 200");
+comments[201]=new Comment(197,198,"This is comment number 201");
+comments[202]=new Comment(197,199,"This is comment number 202");
+comments[203]=new Comment(197,200,"This is comment number 203");
+comments[204]=new Comment(198,202,"This is comment number 204");
+comments[205]=new Comment(198,200,"This is comment number 205");*/
+
+
+
+commentlength=comments.length;
+</script>
+
+</head>
+
+<body>
+<div id="comments" style="position:fixed;left:60%;width:40%;top:0px;height:100%;background-color:#33CC33;overflow-y:auto;">
+	<!--<div id="commentstext" style="left:0px;top:0px;-->
+
+	
+</div>
+<div id="text" style="left:0px;top:0px;width:60%;background-color:#f5f5dc;margin-top:0px;margin-left:0px;position:fixed;height:100%;overflow-y:auto;">
+<div id="textholder">
+	{% for n in list%}
+	<div id="line{{n}}">{{paragraphs[n]}}</div>
+	{% endfor %}
+<!--<div id="line1">The Tragedie of Macbeth</div>
+<div id="line2">&nbsp;</div>
+<div id="line3">Actus Primus. Scoena Prima.</div>
+<div id="line4">&nbsp;</div>
+<div id="line5">Thunder and Lightning. Enter three Witches.</div>
+<div id="line6">&nbsp;</div>
+<div id="line7">  1. When shall we three meet againe?</div>
+<div id="line8">In Thunder, Lightning, or in Raine?</div>
+<div id="line9">  2. When the Hurley-burley's done,</div>
+<div id="line10">When the Battaile's lost, and wonne</div>
+<div id="line11">3. That will be ere the set of Sunne</div>
+<div id="line12"></div>
+<div id="line13">1. Where the place? 2. Vpon the Heath</div>
+<div id="line14"></div>
+<div id="line15">3. There to meet with Macbeth</div>
+<div id="line16"></div>
+<div id="line17">1. I come, Gray-Malkin</div>
+<div id="line18"></div>
+<div id="line19">   All. Padock calls anon: faire is foule, and foule is faire,</div>
+<div id="line20">Houer through the fogge and filthie ayre.</div>
+<div id="line21">Exeunt.</div>
+<div id="line22"></div>
+<div id="line23">Scena Secunda.</div>
+<div id="line24"></div>
+<div id="line25">Alarum within. Enter King Malcome, Donalbaine, Lenox, with attendants, meeting a bleeding Captaine.</div>
+<div id="line26"></div>
+<div id="line27">  King. What bloody man is that? he can report,</div>
+<div id="line28">As seemeth by his plight, of the Reuolt</div>
+<div id="line29">The newest state</div>
+<div id="line30">   Mal. This is the Serieant,</div>
+<div id="line31">Who like a good and hardie Souldier fought</div>
+<div id="line32">'Gainst my Captiuitie: Haile braue friend;</div>
+<div id="line33">Say to the King, the knowledge of the Broyle,</div>
+<div id="line34">As thou didst leaue it</div>
+<div id="line35">   Cap. Doubtfull it stood,</div>
+<div id="line36">As two spent Swimmers, that doe cling together,</div>
+<div id="line37">And choake their Art: The mercilesse Macdonwald</div>
+<div id="line38">(Worthie to be a Rebell, for to that</div>
+<div id="line39">The multiplying Villanies of Nature</div>
+<div id="line40">Doe swarme vpon him) from the Westerne Isles</div>
+<div id="line41">Of Kernes and Gallowgrosses is supply'd,</div>
+<div id="line42">And Fortune on his damned Quarry smiling,</div>
+<div id="line43">Shew'd like a Rebells Whore: but all's too weake:</div>
+<div id="line44">For braue Macbeth (well hee deserues that Name)</div>
+<div id="line45">Disdayning Fortune, with his brandisht Steele,</div>
+<div id="line46">Which smoak'd with bloody execution</div>
+<div id="line47">(Like Valours Minion) caru'd out his passage,</div>
+<div id="line48">Till hee fac'd the Slaue:</div>
+<div id="line49">Which neu'r shooke hands, nor bad farwell to him,</div>
+<div id="line50">Till he vnseam'd him from the Naue toth' Chops,</div>
+<div id="line51">And fix'd his Head vpon our Battlements</div>
+<div id="line52">King. O valiant Cousin, worthy Gentleman</div>
+<div id="line53"></div>
+<div id="line54">   Cap. As whence the Sunne 'gins his reflection,</div>
+<div id="line55">Shipwracking Stormes, and direfull Thunders:</div>
+<div id="line56">So from that Spring, whence comfort seem'd to come,</div>
+<div id="line57">Discomfort swells: Marke King of Scotland, marke,</div>
+<div id="line58">No sooner Iustice had, with Valour arm'd,</div>
+<div id="line59">Compell'd these skipping Kernes to trust their heeles,</div>
+<div id="line60">But the Norweyan Lord, surueying vantage,</div>
+<div id="line61">With furbusht Armes, and new supplyes of men,</div>
+<div id="line62">Began a fresh assault</div>
+<div id="line63">   King. Dismay'd not this our Captaines, Macbeth and</div>
+<div id="line64">Banquoh?</div>
+<div id="line65">  Cap. Yes, as Sparrowes, Eagles;</div>
+<div id="line66">Or the Hare, the Lyon:</div>
+<div id="line67">If I say sooth, I must report they were</div>
+<div id="line68">As Cannons ouer-charg'd with double Cracks,</div>
+<div id="line69">So they doubly redoubled stroakes vpon the Foe:</div>
+<div id="line70">Except they meant to bathe in reeking Wounds,</div>
+<div id="line71">Or memorize another Golgotha,</div>
+<div id="line72">I cannot tell: but I am faint,</div>
+<div id="line73">My Gashes cry for helpe</div>
+<div id="line74">   King. So well thy words become thee, as thy wounds,</div>
+<div id="line75">They smack of Honor both: Goe get him Surgeons.</div>
+<div id="line76">Enter Rosse and Angus.</div>
+<div id="line77">Who comes here?</div>
+<div id="line78">  Mal. The worthy Thane of Rosse</div>
+<div id="line79">   Lenox. What a haste lookes through his eyes?</div>
+<div id="line80">So should he looke, that seemes to speake things strange</div>
+<div id="line81">Rosse. God saue the King</div>
+<div id="line82"></div>
+<div id="line83">   King. Whence cam'st thou, worthy Thane?</div>
+<div id="line84">  Rosse. From Fiffe, great King,</div>
+<div id="line85">Where the Norweyan Banners flowt the Skie,</div>
+<div id="line86">And fanne our people cold.</div>
+<div id="line87">Norway himselfe, with terrible numbers,</div>
+<div id="line88">Assisted by that most disloyall Traytor,</div>
+<div id="line89">The Thane of Cawdor, began a dismall Conflict,</div>
+<div id="line90">Till that Bellona's Bridegroome, lapt in proofe,</div>
+<div id="line91">Confronted him with selfe-comparisons,</div>
+<div id="line92">Point against Point, rebellious Arme 'gainst Arme,</div>
+<div id="line93">Curbing his lauish spirit: and to conclude,</div>
+<div id="line94">The Victorie fell on vs</div>
+<div id="line95">King. Great happinesse</div>
+<div id="line96"></div>
+<div id="line97">   Rosse. That now Sweno, the Norwayes King,</div>
+<div id="line98">Craues composition:</div>
+<div id="line99">Nor would we deigne him buriall of his men,</div>
+<div id="line100">Till he disbursed, at Saint Colmes ynch,</div>
+<div id="line101">Ten thousand Dollars, to our generall vse</div>
+<div id="line102">   King. No more that Thane of Cawdor shall deceiue</div>
+<div id="line103">Our Bosome interest: Goe pronounce his present death,</div>
+<div id="line104">And with his former Title greet Macbeth</div>
+<div id="line105">Rosse. Ile see it done</div>
+<div id="line106"></div>
+<div id="line107">King. What he hath lost, Noble Macbeth hath wonne.</div>
+<div id="line108"></div>
+<div id="line109">Exeunt.</div>
+<div id="line110"></div>
+<div id="line111">Scena Tertia.</div>
+<div id="line112"></div>
+<div id="line113">Thunder. Enter the three Witches.</div>
+<div id="line114"></div>
+<div id="line115">1. Where hast thou beene, Sister? 2. Killing Swine</div>
+<div id="line116"></div>
+<div id="line117">   3. Sister, where thou?</div>
+<div id="line118">  1. A Saylors Wife had Chestnuts in her Lappe,</div>
+<div id="line119">And mouncht, & mouncht, and mouncht:</div>
+<div id="line120">Giue me, quoth I.</div>
+<div id="line121">Aroynt thee, Witch, the rumpe-fed Ronyon cryes.</div>
+<div id="line122">Her Husband's to Aleppo gone, Master o'th' Tiger:</div>
+<div id="line123">But in a Syue Ile thither sayle,</div>
+<div id="line124">And like a Rat without a tayle,</div>
+<div id="line125">Ile doe, Ile doe, and Ile doe</div>
+<div id="line126">2. Ile giue thee a Winde</div>
+<div id="line127"></div>
+<div id="line128">1. Th'art kinde</div>
+<div id="line129"></div>
+<div id="line130">3. And I another</div>
+<div id="line131"></div>
+<div id="line132">   1. I my selfe haue all the other,</div>
+<div id="line133">And the very Ports they blow,</div>
+<div id="line134">All the Quarters that they know,</div>
+<div id="line135">I'th' Ship-mans Card.</div>
+<div id="line136">Ile dreyne him drie as Hay:</div>
+<div id="line137">Sleepe shall neyther Night nor Day</div>
+<div id="line138">Hang vpon his Pent-house Lid:</div>
+<div id="line139">He shall liue a man forbid:</div>
+<div id="line140">Wearie Seu'nights, nine times nine,</div>
+<div id="line141">Shall he dwindle, peake, and pine:</div>
+<div id="line142">Though his Barke cannot be lost,</div>
+<div id="line143">Yet it shall be Tempest-tost.</div>
+<div id="line144">Looke what I haue</div>
+<div id="line145">2. Shew me, shew me</div>
+<div id="line146"></div>
+<div id="line147">1. Here I haue a Pilots Thumbe, Wrackt, as homeward he did come.</div>
+<div id="line148"></div>
+<div id="line149">Drum within.</div>
+<div id="line150"></div>
+<div id="line151">  3. A Drumme, a Drumme:</div>
+<div id="line152">Macbeth doth come</div>
+<div id="line153">   All. The weyward Sisters, hand in hand,</div>
+<div id="line154">Posters of the Sea and Land,</div>
+<div id="line155">Thus doe goe, about, about,</div>
+<div id="line156">Thrice to thine, and thrice to mine,</div>
+<div id="line157">And thrice againe, to make vp nine.</div>
+<div id="line158">Peace, the Charme's wound vp.</div>
+<div id="line159">Enter Macbeth and Banquo.</div>
+<div id="line160">Macb. So foule and faire a day I haue not seene</div>
+<div id="line161"></div>
+<div id="line162">   Banquo. How farre is't call'd to Soris? What are these,</div>
+<div id="line163">So wither'd, and so wilde in their attyre,</div>
+<div id="line164">That looke not like th' Inhabitants o'th' Earth,</div>
+<div id="line165">And yet are on't? Liue you, or are you aught</div>
+<div id="line166">That man may question? you seeme to vnderstand me,</div>
+<div id="line167">By each at once her choppie finger laying</div>
+<div id="line168">Vpon her skinnie Lips: you should be Women,</div>
+<div id="line169">And yet your Beards forbid me to interprete</div>
+<div id="line170">That you are so</div>
+<div id="line171">   Mac. Speake if you can: what are you?</div>
+<div id="line172">  1. All haile Macbeth, haile to thee Thane of Glamis</div>
+<div id="line173">2. All haile Macbeth, haile to thee Thane of Cawdor</div>
+<div id="line174"></div>
+<div id="line175">3. All haile Macbeth, that shalt be King hereafter</div>
+<div id="line176"></div>
+<div id="line177">   Banq. Good Sir, why doe you start, and seeme to feare</div>
+<div id="line178">Things that doe sound so faire? i'th' name of truth</div>
+<div id="line179">Are ye fantasticall, or that indeed</div>
+<div id="line180">Which outwardly ye shew? My Noble Partner</div>
+<div id="line181">You greet with present Grace, and great prediction</div>
+<div id="line182">Of Noble hauing, and of Royall hope,</div>
+<div id="line183">That he seemes wrapt withall: to me you speake not.</div>
+<div id="line184">If you can looke into the Seedes of Time,</div>
+<div id="line185">And say, which Graine will grow, and which will not,</div>
+<div id="line186">Speake then to me, who neyther begge, nor feare</div>
+<div id="line187">Your fauors, nor your hate</div>
+<div id="line188">1. Hayle</div>
+<div id="line189"></div>
+<div id="line190">2. Hayle</div>
+<div id="line191"></div>
+<div id="line192">3. Hayle</div>
+<div id="line193"></div>
+<div id="line194">1. Lesser than Macbeth, and greater</div>
+<div id="line195"></div>
+<div id="line196">2. Not so happy, yet much happyer</div>
+<div id="line197"></div>
+<div id="line198">3. Thou shalt get Kings, though thou be none: So all haile Macbeth, and Banquo</div>
+<div id="line199"></div>
+<div id="line200">1. Banquo, and Macbeth, all haile</div>-->
+</div>
+</div>
+</body>
+
+</html>
