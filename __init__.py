@@ -29,6 +29,10 @@ login.login_view = 'login'
 login.login_message = "Please log in"
 
 #Flask commands
+@app.route('/')
+def index():
+	return render_template('index.html', books=books.find())
+
 @app.route('/createUser', methods=['POST', 'GET'])
 def create_user():
 	try:
