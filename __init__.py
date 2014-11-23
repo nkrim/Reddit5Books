@@ -41,8 +41,8 @@ def get_book(title):
  	try:
 		bk = books.find_one({'title': title})
 		text = bk['text']
-		comments = bk['comments']
-		return render_template('booktemplate.html', title=title, text=text, comments=comments)
+		results = bk['comments']
+		return render_template('booktemplate.html', title=title, text=text, potatoes=results)
 	except Exception as e:
 		print e
 	return "failed"
