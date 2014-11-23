@@ -54,7 +54,7 @@ def add_book():
 		books.insert(bk)
 	except Exception as e:
 		print e
-	return "Collection succesfully created as " + title + " with author " + author + " and text:\n" + text
+	return render_template('/successpage')
 
 @app.route('/addComment', methods=['POST', 'GET'])
 def add_comment():
