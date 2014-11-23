@@ -40,9 +40,8 @@ def create_user():
 def get_book(title):
  	try:
 		bk = books.find_one({'title': title})
-		plaintext = str(bk['text'])
-		text = formatplaintext(plaintext)
-		comments = formatcomments(bk['comments'])
+		text = bk['text']
+		comments = bk['comments']
 		return render_template('booktemplate.html', title=title, text=text, comments=comments)
 	except Exception as e:
 		print e
