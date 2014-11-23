@@ -1,5 +1,8 @@
 Reddit5Books
 ============
+
+A crowd-sourced book annotation solution developed in 24 hours at Wildhacks 2014.  
+
 ░░░░░░░░░░░░░░▄▄▄▄▄▄▄▄▄▄▄▄░░░░░░░░░░░░░░
 ░░░░░░░░░░░░▄████████████████▄░░░░░░░░░░
 ░░░░░░░░░░▄██▀░░░░░░░▀▀████████▄░░░░░░░░
