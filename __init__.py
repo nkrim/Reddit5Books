@@ -3,7 +3,7 @@ from flask.ext.pymongo import PyMongo
 from pymongo import Connection
 from operator import itemgetter
 from flask.ext.login import LoginManager
-import formatBook
+from formatBook import formatplaintext, formatcomments
 
 
 app = Flask(__name__)
@@ -39,12 +39,14 @@ def create_user():
 @app.route('/book/<title>')
 def get_book(title):
  	try:
-		bk = books[title]
-		text = formatplaintext(bk['text'])
+		bk = books.find_one({'title': title})
+		plaintext = str(bk['text'])
+		text = formatplaintext(plaintext)
 		comments = formatcomments(bk['comments'])
+		return render_template('booktemplate.html', title=title, text=text, comments=comments)
 	except Exception as e:
 		print e
-	return render_template('booktemplate.html', text=text, comments=comments)
+	return "failed"
 
 @app.route('/addBook')
 def add_book_render():

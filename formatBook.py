@@ -3,7 +3,7 @@
 #	lines=f.readlines()
 #	result=open(output,"w")
 def formatplaintext(input):
-	lines=input.lines()
+	lines=input.split('\n')
 	result=""
 	i=0
 	for line in lines:
