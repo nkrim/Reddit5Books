@@ -99,8 +99,8 @@ function Comment (st,en,subject,text) {
 //{%comments%}
 //comments[0]=new Comment(5,10,"lolz omg first post", "hi every1 im new!!!!!!! holds up spork my name is katy but u can call me t3h PeNgU1N oF d00m!!!!!!!! lol…as u can see im very random!!!! thats why i came here, 2 meet random ppl like me _… im 13 years old (im mature 4 my age tho!!) i like 2 watch invader zim w/ my girlfreind (im bi if u dont like it deal w/it) its our favorite tv show!!! bcuz its SOOOO random!!!! shes random 2 of course but i want 2 meet more random ppl =) like they say the more the merrier!!!! lol…neways i hope 2 make alot of freinds here so give me lots of commentses!!!! DOOOOOMMMM!!!!!!!!!!!!!!!! <--- me bein random again _^ hehe…toodles!!!!!love and waffles,t3h PeNgU1N oF d00m");
 //assuming comments do not come sorted
-{% for n in list %}
-comments[{{n}}]=new Comment({{comments[n].st}},{{comments[n].en}},"{{comments[n].subject}}","{{comments[n].contents}}");
+{% for comment in comments %}
+comments[{{loop.index0}}]=new Comment({{comments[list.index0].start}},{{comments[list.index0].end}},"{{comments[list.index0].subject}}","{{comments[list.index0].details}},);\n"
 {% endfor %}
 //comments[0]=new Comment(0,5,"lolz omg first post", "filler");
 /*comments[1]=new Comment(0,3,"This is comment number 1");
