@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Reddit5Books - {{title}}</title>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<!--<script src="jquery-1.11.1.js"></script>-->
+<script src="jquery-1.11.1.js"></script>
 <script type="text/javascript">
 var height=-1;
 var commentlength=-1;
@@ -14,7 +13,7 @@ function filterunsorted(curpos) {
 	var botline=($(window).height()+curpos)*200/height;
 	var string="";
 	for (i=0; i<commentlength; i++) {
-		if ($( "#line"+i).is(":visible")) {
+		if ($( "#line"+i).is(":visible") {
 		//if (comments[i].en>=topline && comments[i].st<=botline) {
 			string=string+"<div id=\"comment"+i+"\">"+subjectline(i)+"</div>\n";
 			//addclickhandler(i);
@@ -63,6 +62,9 @@ function addclickhandler(number) {
 
 	});
 }
+
+
+
 $( document ).ready(function() {
     console.log( "ready!" );
 
@@ -97,11 +99,11 @@ function Comment (st,en,subject,text) {
     this.text = text;
     this.subject=subject;
 }
-
+//{%comments%}
 //comments[0]=new Comment(5,10,"lolz omg first post", "hi every1 im new!!!!!!! holds up spork my name is katy but u can call me t3h PeNgU1N oF d00m!!!!!!!! lol…as u can see im very random!!!! thats why i came here, 2 meet random ppl like me _… im 13 years old (im mature 4 my age tho!!) i like 2 watch invader zim w/ my girlfreind (im bi if u dont like it deal w/it) its our favorite tv show!!! bcuz its SOOOO random!!!! shes random 2 of course but i want 2 meet more random ppl =) like they say the more the merrier!!!! lol…neways i hope 2 make alot of freinds here so give me lots of commentses!!!! DOOOOOMMMM!!!!!!!!!!!!!!!! <--- me bein random again _^ hehe…toodles!!!!!love and waffles,t3h PeNgU1N oF d00m");
 //assuming comments do not come sorted
 {% for comment in comments %}
-comments[{{loop.index0}}]=new Comment({{comment.start}},{{comment.end}},"{{comment.subject}}","{{comment.details}}");
+comments[{{loop.index0}}]=new Comment({{comments[list.index0].start}},{{comments[list.index0].end}},"{{comments[list.index0].subject}}","{{comments[list.index0].details}},);\n"
 {% endfor %}
 //comments[0]=new Comment(0,5,"lolz omg first post", "filler");
 /*comments[1]=new Comment(0,3,"This is comment number 1");
@@ -318,15 +320,26 @@ commentlength=comments.length;
 </head>
 
 <body>
-<div id="comments" style="position:fixed;left:60%;width:40%;top:0px;height:100%;background-color:#33CC33;overflow-y:auto;">
+<div id="commentsubmit" style="position:fixed;left:60%;top:0px; width:40%;height:20%;background-color:yellow">
+<form id="commentsubmit" action="/addComment" method="POST">
+	<input type="text" name="start" value="Start Line" onFocus='if (this.value=="Start Line") this.value="";' onBlur='if (this.value=="") this.value="Start Line";'>
+		
+		<input type="text" name="end" value="End Line" onFocus='if (this.value=="End Line") this.value="";' onBlur='if (this.value=="") this.value="End Line";'>
+		<input type="text" name="subject" value="Subject" onFocus='if (this.value=="Subject") this.value="";' onBlur='if (this.value=="") this.value="Subject";'>
+		<input type="submit">
+		<br>
+		<textarea name="details" cols="57" rows="4" onFocus='if (this.value=="Comment") this.value="";' onBlur='if (this.value=="") this.value="Comment";'>Comment</textarea>
+	<br>
+</div>
+<div id="comments" style="position:fixed;left:60%;width:40%;top:20%;height:100%;background-color:#33CC33;overflow-y:auto;">
 	<!--<div id="commentstext" style="left:0px;top:0px;-->
 
 	
 </div>
 <div id="text" style="left:0px;top:0px;width:60%;background-color:#f5f5dc;margin-top:0px;margin-left:0px;position:fixed;height:100%;overflow-y:auto;">
 <div id="textholder">
-	{% for paragraph in paragraphs %}
-	<div id="line{{loop.index0}}">{{paragraph}}</div>
+	{% for n in list%}
+	<div id="line{{n}}">{{n}}:<p>{{paragraphs[n]}}</p></div>
 	{% endfor %}
 <!--<div id="line1">The Tragedie of Macbeth</div>
 <div id="line2">&nbsp;</div>
