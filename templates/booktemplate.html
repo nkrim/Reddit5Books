@@ -27,39 +27,16 @@ function filterunsorted(curpos) {
 	$("#comments").html(string);
 }
 
-/*function makeAjaxRequest(form, event, onSuccess) {
-		//STOP default action
-		event.preventDefault();
-		var postData = $(form).serializeArray();
-	    var formURL = $(form).attr("action");
-	    $.ajax(
-	    {
-	        url : formURL,
-	        type: "POST",
-	        data : postData,
-	        success:function(data, textStatus, jqXHR) 
-	        {
-	            if (onSuccess != null) {
-	            	onSuccess(data);
-	            }
-	            disablePopup();
-	        },
-	        error: function(jqXHR, textStatus, errorThrown) 
-	        {
-	            alert("Error! Failed response from the server");
-	            console.log(errorThrown + " " + textStatus);    
-	        }
-	    });
-	}*/
-function upvote(subject) {
-	console.log("attempting to upvote"+subject);
+
+function upvote(_id) {
+	console.log("attempting to upvote "+_id);
 	$.ajax(
 	{
 		url:'/upvote/{{title}}',
 		type:"POST",
-		data: subject,
+		data: {'_id': _id},
 		success:function(data, textStatus, jqXHR) {
-			console.log("upvoted");
+			//JSON.parse(data);
 		}
 	});
 }
@@ -75,12 +52,59 @@ function unhighlight(number) {
 	}
 }
 function subjectline(number) {
-	return ("Lines "+comments[number].st+"-"+comments[number].en+":\t"+comments[number].subject);
+	return (comments[number].score+" Lines "+comments[number].st+"-"+comments[number].en+":\t"+comments[number].subject);
 }
+//function upclick(this) {
+
+//}
 function showtext(number) {
 	console.log("#comment"+number);
-	$( "#comment"+number).html(subjectline(number)+"<br>"+comments[number].text+'<div class="upvote" style="position:relative;top:0px;width:30px;height:30px;background-color:red;" onClick="upvote(comments[$( this ).parent().attr("id").substring(4)]);event.stopPropogation;return false;"></div>');
+	var color="red";
+	if (comments[number].upvoted) {
+		color="blue";
+	}
+	$( "#comment"+number).html(subjectline(number)+"<br>"+comments[number].text+'<div class="upvote" style="position:relative;top:0px;width:30px;height:30px;background-color:'+color+';"></div>');//onClick="console.log(\"upboating\");"></div>');
+	$(".upvote").on("click",function(event) {
+		var parentnum=$(this).parent().attr("id").substring(7);
+		console.log("parent number is "+parentnum);
+		if (!comments[parentnum].upvoted) {
+			upvote(comments[parentnum]._id);
+			comments[parentnum].upvoted=true;
+			comments[parentnum].score+=1;
+			
+			for (i=parentnum;i>=1;i--) {
+				if (comments[i].score>comments[i-1].score) {
+					var temp=comments[i];
+					comments[i]=comments[i-1];
+					comments[i-1]=temp;
+					if (i==previousviewed) {
+						previousviewed--;
+					}
+					hidetext(i)
+				}
+				else {
+					
+					break;
+				}
+				
+			}
+			var curpos=$("#text").scrollTop();
+		
+			filterunsorted(curpos);
+			for (i=0;i<commentlength;i++) {
+				if (i==previousviewed) {
+					showtext(i);
+				}
+				else {
+					hidetext(i);
+				}
+			}
+			
+		}
+		event.stopPropagation();
+	});
 }
+//upvote(comments[$( this ).parent().attr(\"id\").substring(4)]);event.stopPropogation();return false;
 function hidetext(number) {
 	$( "#comment"+number).html(subjectline(number));
 }
@@ -139,15 +163,18 @@ $( document ).ready(function() {
 	console.log($(window).height());
 });
 var comments = new Array();
-function Comment (st,en,subject,text) {
+function Comment (st,en,score,_id,subject,text) {
     this.st = st;
     this.en = en;
+    this._id=_id;
     this.text = text;
     this.subject=subject;
+    this.upvoted=false;
+    this.score=score;
 }
 
 {% for comment in comments %}
-comments[{{loop.index0}}]=new Comment({{comment.start}},{{comment.end}},"{{comment.subject}}","{{comment.details}}");
+comments[{{loop.index0}}]=new Comment({{comment.start}},{{comment.end}},{{comment.score}},{{comment._id}},"{{comment.subject}}","{{comment.details}}");
 {% endfor %}
 
 
@@ -173,10 +200,10 @@ commentlength=comments.length;
 
 	
 </div>
-<div id="text" style="left:0px;top:0px;width:60%;background-color:#f5f5dc;margin-top:0px;margin-left:0px;position:fixed;height:100%;overflow-y:auto;">
+<div id="text" style="left:0px;top:0px;width:60%;background-color:#f5f5dc;margin-top:0px;margin-left:0px;position:fixed;height:100%;overflow-y:auto;overflow-wrap:break-word;">
 <div id="textholder">
 	{% for line in paragraphs%}
-	<div id="line{{loop.index0}}">{{loop.index0}}:<p style="position:relative:top:0px;margin-top:0px;margin-left:20px;">{{line}}</p></div>
+	<div id="line{{loop.index0}}">{{loop.index0}}:<p style="position:relative:top:0px;margin-top:0px;margin-left:20px;margin-bottom:0px;">{{line}}</p></div>
 	{% endfor %}
 </div>
 </div>

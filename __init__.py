@@ -4,6 +4,8 @@ from pymongo import Connection
 from operator import itemgetter
 from flask.ext.login import LoginManager
 from formatBook import formatplaintext, formatcomments
+import json
+
 
 
 app = Flask(__name__)
@@ -42,10 +44,12 @@ def get_book(title):
 		bk = books.find_one({'title': title})
 		text = bk['text'].split('\n')
 		results = bk['comments']
-		print results
 	except Exception as e:
 		print e
-	return render_template('booktemplate.html', title=title, paragraphs=text, comments=results)
+	try:
+		return render_template('booktemplate.html', title=title, paragraphs=text, comments=results)
+	except Exception as e:
+		print e
 	
 
 @app.route('/addBook')
@@ -70,19 +74,49 @@ def add_book():
 @app.route('/addComment/<title>', methods=['POST', 'GET'])
 def add_comment(title):
 	try:
+		bk = books.find_one({'title': title})
 		cmnt = {#'user': 	request.form['user'],
+				'_id':		len(bk['comments']),
 				'subject':	request.form['subject'],
 				'details':	request.form['details'],
 				'start': 	request.form['start'],
-				'end':		request.form['end']}
-		bk = books.find_one({'title': title})
-		bk['comments'].append(cmnt)
-		bk['comments'] = sorted(bk['comments'], key=itemgetter('start'))
-		books.save(bk)
-		print url_for('get_book', title=title)
+				'end':		request.form['end'],
+				'score':	0}
+		try:
+			st=int(cmnt['start'])
+			en=int(cmnt['end'])
+			if (st>en):
+				1/0
+			#print("here")
+			bk['comments'].append(cmnt)
+			print type(bk['comments'])
+			bk['comments'] = sorted(bk['comments'], key=itemgetter('score'), reverse=True)
+			#(bk['comments'])
+			books.save(bk)
+		except:
+			print("error")
+
 	except Exception as e:
 		print e
 	return redirect(url_for('get_book', title=title))
+
+@app.route('/upvote/<title>', methods=['POST', 'GET'])
+def upvote(title):
+	try:
+		bk = books.find_one({'title': title})
+		cmnts = bk['comments']
+		_id = request.form['_id']
+		for comment in cmnts:
+			if (comment['_id']==int(_id)):
+				scr = comment['score']
+				comment['score'] = scr+1
+		bk['comments']=sorted(bk['comments'], key=itemgetter('score'),reverse=True)
+		#list.reverse(bk['comments'])
+		books.save(bk)
+		return json.dumps(books['comments'])
+	except Exception as e:
+		print e
+	return ""
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
