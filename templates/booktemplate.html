@@ -79,7 +79,7 @@ function subjectline(number) {
 }
 function showtext(number) {
 	console.log("#comment"+number);
-	$( "#comment"+number).html(subjectline(number)+"<br>"+comments[number].text+'<div class="upvote" style="position:relative;top:0px;width:30px;height:30px;" onClick="upvote(comments[$( this ).parent().attr("id").substring(4)]);return false;"></div>');
+	$( "#comment"+number).html(subjectline(number)+"<br>"+comments[number].text+'<div class="upvote" style="position:relative;top:0px;width:30px;height:30px;background-color:red;" onClick="upvote(comments[$( this ).parent().attr("id").substring(4)]);event.stopPropogation;return false;"></div>');
 }
 function hidetext(number) {
 	$( "#comment"+number).html(subjectline(number));
