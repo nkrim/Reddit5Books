@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+<body bgcolor="#f5f5dc">
+	<h2><a href="/addBook">Submit a Book</a></h2>
+	<h2> Book List</h2>
+	<ul>
+	{%for book in books%}
+	<li>{{book.title}}</li>
+	{% endfor %}
+</ul>
+</body>
+
+</html>
