@@ -8,16 +8,30 @@
 var height=-1;
 var commentlength=-1;
 var previousviewed=-1;
-function filterunsorted(curpos) {
-	var topline=curpos*200/height;
-	var botline=($(window).height()+curpos)*200/height;
+
+function isScrolledIntoView(elem)//borrowed from stackoverflow
+{
+    var docViewTop = $(window).scrollTop();
+    var docViewBottom = docViewTop + $(window).height();
+
+    var elemTop = $(elem).offset().top;
+    var elemBottom = elemTop + $(elem).height();
+
+    return ((elemBottom <= docViewBottom+53) && (elemTop >= docViewTop+53));
+}
+
+function filterunsorted() {//curpos) {
+	//var topline=curpos*200/height;
+	//var botline=($(window).height()+curpos)*200/height;
 	var string="";
 	for (i=0; i<commentlength; i++) {
 		console.log(comments[i].st)
-		if ($( "#line"+comments[i].st).is(":visible") || $( "#line"+comments[i].en).is(":visible")) {
+		if (isScrolledIntoView($("#line"+comments[i].st))||isScrolledIntoView($("#line"+comments[i].en))) {//} ($( "#line"+comments[i].st).is(":visible") || $( "#line"+comments[i].en).is(":visible")) {
 		//if (comments[i].en>=topline && comments[i].st<=botline) {
 			string=string+"<div id=\"comment"+i+"\">"+subjectline(i)+"</div>\n";
+			console.log(isScrolledIntoView($("#line"+comments[i].st)));
 			//addclickhandler(i);
+			console.log($( "#line"+comments[i].st).is(":visible") +" "+$( "#line"+comments[i].en).is(":visible"))
 		}
 		else {
 			console.log(i+" is not visible");
@@ -52,7 +66,7 @@ function unhighlight(number) {
 	}
 }
 function subjectline(number) {
-	return (comments[number].score+" Lines "+comments[number].st+"-"+comments[number].en+":\t"+comments[number].subject);
+	return ("<b>"+comments[number].score+"</b> <i>Lines "+comments[number].st+"-"+comments[number].en+":</i>\t<b>"+comments[number].subject+"</b>");
 }
 //function upclick(this) {
 
@@ -61,11 +75,14 @@ function showtext(number) {
 	console.log("#comment"+number);
 	var color="red";
 	if (comments[number].upvoted) {
-		color="blue";
+		color="white";
 	}
-	$( "#comment"+number).html(subjectline(number)+"<br>"+comments[number].text+'<div class="upvote" style="position:relative;top:0px;width:30px;height:30px;background-color:'+color+';"></div>');//onClick="console.log(\"upboating\");"></div>');
-	$(".upvote").on("click",function(event) {
-		var parentnum=$(this).parent().attr("id").substring(7);
+	$( "#comment"+number).html("<div style=background-color:#99CCFF>"+subjectline(number)+"<br>"+comments[number].text+'<div class="upvote" style="position:relative;top:0px;width:30px;height:30px;color:'+color+';"><img class="upvote2" src="/static/arrow.png" style="width:25px;"></div></div>');//onClick="console.log(\"upboating\");"></div>');
+	$(".upvote2").on("click",function(event) {
+		console.log($(this).prop("tagName"));
+		console.log($(this).parent().prop("tagName"));
+		console.log($(this).parent().parent().prop("tagName"));
+		var parentnum=$(this).parent().parent().parent().attr("id").substring(7);
 		console.log("parent number is "+parentnum);
 		if (!comments[parentnum].upvoted) {
 			upvote(comments[parentnum]._id);
@@ -90,7 +107,7 @@ function showtext(number) {
 			}
 			var curpos=$("#text").scrollTop();
 		
-			filterunsorted(curpos);
+			filterunsorted();//curpos);
 			for (i=0;i<commentlength;i++) {
 				if (i==previousviewed) {
 					showtext(i);
@@ -141,7 +158,7 @@ $( document ).ready(function() {
     $( "#text" ).on("scroll", function() {
 		var curpos=$("#text").scrollTop();
 		//need to filter the data
-		filterunsorted(curpos);
+		filterunsorted();//curpos);
 		
 		//console.log(botline);
 		console.log(curpos);
@@ -184,27 +201,35 @@ commentlength=comments.length;
 </head>
 
 <body>
-<div id="commentsubmit" style="position:fixed;left:60%;top:0px; width:40%;height:20%;background-color:yellow">
+<div style="width: 100%; margins: 0;"><a href="/"><img src="/static/Reddit5Books.png" style="size: relative; width: 15%;"></a></div>
+<hr>
+<div>
+<div id="commentsubmit" style="position:fixed;left:60%;margin-left:5px;width:40%;height:20%;">
 <form id="commentsubmit" action="/addComment/{{title}}" method="POST">
 	<input type="text" name="start" value="Start Line" onFocus='if (this.value=="Start Line") this.value="";' onBlur='if (this.value=="") this.value="Start Line";'>
 		
 		<input type="text" name="end" value="End Line" onFocus='if (this.value=="End Line") this.value="";' onBlur='if (this.value=="") this.value="End Line";'>
 		<input type="text" name="subject" value="Subject" onFocus='if (this.value=="Subject") this.value="";' onBlur='if (this.value=="") this.value="Subject";'>
-		<input type="submit">
 		<br>
 		<textarea name="details" cols="57" rows="4" onFocus='if (this.value=="Comment") this.value="";' onBlur='if (this.value=="") this.value="Comment";'>Comment</textarea>
+		<input type="submit">
+	</form>
+	<hr>
 	<br>
 </div>
-<div id="comments" style="position:fixed;left:60%;width:40%;top:20%;height:100%;background-color:#33CC33;overflow-y:auto;">
+<div id="comments" style="position:fixed;margin-left:5px;left:60%;width:40%;top:189px;height:100%;overflow-y:auto;">
 	<!--<div id="commentstext" style="left:0px;top:0px;-->
 
 	
 </div>
-<div id="text" style="left:0px;top:0px;width:60%;background-color:#f5f5dc;margin-top:0px;margin-left:0px;position:fixed;height:100%;overflow-y:auto;overflow-wrap:break-word;">
+<div id="text" style="left:0px;width:60%;margin-left:0px;position:fixed;height:100%;overflow-y:auto;overflow-wrap:break-word;">
 <div id="textholder">
+	
 	{% for line in paragraphs%}
-	<div id="line{{loop.index0}}">{{loop.index0}}:<p style="position:relative;top:-13pt;margin-top:0px;margin-left:48pt;margin-bottom:-13pt;">{{line}}</p></div>
+	<div id="line{{loop.index0}}">{{loop.index0}}:<p style="position:relative;top:-13pt;margin-top:0px;margin-left:48pt;margin-bottom:-13pt;">{{line|safe}}</p></div>
 	{% endfor %}
+	
+</div>
 </div>
 </div>
 </body>

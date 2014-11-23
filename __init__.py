@@ -47,6 +47,9 @@ def get_book(title):
  	try:
 		bk = books.find_one({'title': title})
 		text = bk['text'].split('\n')
+		for i in range(0,len(text)):
+			if (len(text[i].strip())<=2):
+				text[i]="&nbsp;"
 		results = bk['comments']
 	except Exception as e:
 		print e

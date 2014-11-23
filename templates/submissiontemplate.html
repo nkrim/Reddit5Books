@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 </head>
-<body bgcolor="#f5f5dc">
+<body height="100%">
+	<div style="width: 100%; margins: 0;"><a href="/"><img src="/static/Reddit5Books.png" style="size: relative; width: 15%;"></a></div>
+	<hr>
 	<form id="submissionform" action="/addBookBack" method="POST">
 		Title:
 		<input type="text" name="title">
@@ -11,9 +13,9 @@
 		<input type="text" name="author">
 		Submit Book:
 		<input type="submit">
+		Text:<br>
+		<textarea name="text" form="submissionform" style="width: 80vw; height: 80vh;"></textarea>
 	</form>
-	Text:<br>
-	<textarea name="text" form="submissionform"></textarea>
 </body>
 
 </html>

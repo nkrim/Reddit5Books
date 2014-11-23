@@ -3,12 +3,14 @@
 <head>
 <meta charset="UTF-8">
 </head>
-<body bgcolor="#f5f5dc">
+<body>
+	<div style="width: 100%; margins: 0;"><a href="/"><img src="/static/Reddit5Books.png" style="size: relative; width: 15%;"></a></div>
+	<hr>
 	<h2><a href="/addBook">Submit a Book</a></h2>
 	<h2> Book List</h2>
 	<ul>
 	{%for book in books%}
-	<li><a href="/book/{{book.title}}">{{book.title}}</a></li>
+	<li><a href="/book/{{book.title}}"><b><i>{{book.title}}</i></b> - {{book.author}}</a></li>
 	{% endfor %}
 </ul>
 </body>
