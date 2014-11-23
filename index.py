@@ -5,6 +5,7 @@ from operator import itemgetter
 import flask.ext.login
 import static/formatBook.py
 
+
 app = Flask(__name__)
 login = LoginManager(app)
 
@@ -41,9 +42,13 @@ def get_book(title):
 		comments = formatcomments(bk['comments'])
 	except Exception as e:
 		print e
-	return render_template('/book', text=text, comments=comments)
+	return render_template('booktemplate.html', text=text, comments=comments)
 
-@app.route('/addBook', methods=['POST','GET'])
+@app.route('/addBook')
+def add_book_render():
+	render_template('submissiontemplate.html')
+
+@app.route('/addBookBack', methods=['POST','GET'])
 def add_book():
 	try:
 		login.unauthorized()
@@ -54,7 +59,7 @@ def add_book():
 		books.insert(bk)
 	except Exception as e:
 		print e
-	return render_template('/successpage')
+	return render_template('successpage.html')
 
 @app.route('/addComment', methods=['POST', 'GET'])
 def add_comment():
