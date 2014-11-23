@@ -3,6 +3,7 @@ from flask.ext.pymongo import PyMongo
 from pymongo import Connection
 from operator import itemgetter
 import flask.ext.login
+import static/formatBook.py
 
 app = Flask(__name__)
 login = LoginManager(app)
@@ -22,6 +23,7 @@ def load_user(userid):
 login.login_view = 'login'
 login.login_message = "Please log in"
 
+#Flask commands
 @app.route('/createUser', methods=['POST', 'GET'])
 def create_user():
 	try:
@@ -35,10 +37,11 @@ def create_user():
 def get_book(title):
  	try:
 		bk = books[title]
-		#comments 
+		text = formatplaintext(bk['text'])
+		comments = formatcomments(bk['comments'])
 	except Exception as e:
 		print e
-	return render_template('/book', text=bk['text'], comments=comments)
+	return render_template('/book', text=text, comments=comments)
 
 @app.route('/addBook', methods=['POST','GET'])
 def add_book():
