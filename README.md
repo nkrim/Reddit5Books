@@ -3,6 +3,8 @@ Reddit5Books
 
 A crowd-sourced book annotation solution developed in 24 hours at Wildhacks 2014.  
 
+In keeping with the theme of the competition, here's an image of Nicholas Cage.
+
 ░░░░░░░░░░░░░░▄▄▄▄▄▄▄▄▄▄▄▄░░░░░░░░░░░░░░
 ░░░░░░░░░░░░▄████████████████▄░░░░░░░░░░
 ░░░░░░░░░░▄██▀░░░░░░░▀▀████████▄░░░░░░░░
