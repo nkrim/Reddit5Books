@@ -40,7 +40,7 @@ def create_user():
 def get_book(title):
  	try:
 		bk = books.find_one({'title': title})
-		text = bk['text']
+		text = bk['text'].split('\n')
 		results = bk['comments']
 		return render_template('booktemplate.html', title=title, paragraphs=text, potatoes=results)
 	except Exception as e:
