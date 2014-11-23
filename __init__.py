@@ -42,10 +42,11 @@ def get_book(title):
 		bk = books.find_one({'title': title})
 		text = bk['text']
 		results = bk['comments']
-		return render_template('booktemplate.html', title=title, text=text, potatoes=results)
+		return render_template('booktemplate.html', title=title, paragraphs=text, potatoes=results)
 	except Exception as e:
 		print e
 	return "failed"
+	
 
 @app.route('/addBook')
 def add_book_render():

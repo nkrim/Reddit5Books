@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Reddit5Books - {{title}}</title>
-<script src="jquery-1.11.1.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<!--<script src="jquery-1.11.1.js"></script>-->
 <script type="text/javascript">
 var height=-1;
 var commentlength=-1;
@@ -324,8 +325,8 @@ commentlength=comments.length;
 </div>
 <div id="text" style="left:0px;top:0px;width:60%;background-color:#f5f5dc;margin-top:0px;margin-left:0px;position:fixed;height:100%;overflow-y:auto;">
 <div id="textholder">
-	{% for n in list%}
-	<div id="line{{n}}">{{paragraphs[n]}}</div>
+	{% for paragraph in paragraphs %}
+	<div id="line{{loop.index0}}">{{paragraph}}</div>
 	{% endfor %}
 <!--<div id="line1">The Tragedie of Macbeth</div>
 <div id="line2">&nbsp;</div>
