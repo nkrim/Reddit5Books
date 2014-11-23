@@ -8,7 +8,7 @@
 	<h2> Book List</h2>
 	<ul>
 	{%for book in books%}
-	<li>{{book.title}}</li>
+	<li><a href="/book/{{book.title}}">{{book.title}}</a></li>
 	{% endfor %}
 </ul>
 </body>
