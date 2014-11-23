@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, redirect
 from flask.ext.pymongo import PyMongo
 from pymongo import Connection
 from operator import itemgetter
@@ -42,10 +42,10 @@ def get_book(title):
 		bk = books.find_one({'title': title})
 		text = bk['text'].split('\n')
 		results = bk['comments']
-		return render_template('booktemplate.html', title=title, paragraphs=text, potatoes=results)
+		print results
 	except Exception as e:
 		print e
-	return "failed"
+	return render_template('booktemplate.html', title=title, paragraphs=text, comments=results)
 	
 
 @app.route('/addBook')
@@ -67,21 +67,22 @@ def add_book():
 		print e
 	return render_template('successpage.html')
 
-@app.route('/addComment', methods=['POST', 'GET'])
-def add_comment():
+@app.route('/addComment/<title>', methods=['POST', 'GET'])
+def add_comment(title):
 	try:
-		cmnt = {'user': 	request.form['user'],
+		cmnt = {#'user': 	request.form['user'],
 				'subject':	request.form['subject'],
 				'details':	request.form['details'],
 				'start': 	request.form['start'],
 				'end':		request.form['end']}
-		bk = books.find(title)
+		bk = books.find_one({'title': title})
 		bk['comments'].append(cmnt)
 		bk['comments'] = sorted(bk['comments'], key=itemgetter('start'))
 		books.save(bk)
+		print url_for('get_book', title=title)
 	except Exception as e:
 		print e
-	return "Comment from " +user+ " about " +subject+ " saved to " +title
+	return redirect(url_for('get_book', title=title))
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():

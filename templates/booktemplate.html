@@ -321,7 +321,7 @@ commentlength=comments.length;
 
 <body>
 <div id="commentsubmit" style="position:fixed;left:60%;top:0px; width:40%;height:20%;background-color:yellow">
-<form id="commentsubmit" action="/addComment" method="POST">
+<form id="commentsubmit" action="/addComment/{{title}}" method="POST">
 	<input type="text" name="start" value="Start Line" onFocus='if (this.value=="Start Line") this.value="";' onBlur='if (this.value=="") this.value="Start Line";'>
 		
 		<input type="text" name="end" value="End Line" onFocus='if (this.value=="End Line") this.value="";' onBlur='if (this.value=="") this.value="End Line";'>
