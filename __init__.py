@@ -1,13 +1,15 @@
-from flask import Flask
+from flask import Flask, render_template, request
 from flask.ext.pymongo import PyMongo
 from pymongo import Connection
 from operator import itemgetter
-import flask.ext.login
-import static/formatBook.py
+from flask.ext.login import LoginManager
+import formatBook
 
 
 app = Flask(__name__)
 login = LoginManager(app)
+
+app.secret_key = "random"
 
 connection = Connection()
 db = connection.reddit5books
@@ -46,12 +48,14 @@ def get_book(title):
 
 @app.route('/addBook')
 def add_book_render():
-	render_template('submissiontemplate.html')
+	try:
+		return render_template('submissiontemplate.html')
+	except Exception as e:
+		print e
 
 @app.route('/addBookBack', methods=['POST','GET'])
 def add_book():
 	try:
-		login.unauthorized()
 		bk = {'title': 		request.form['title'], 
 			  'author': 	request.form['author'], 
 			  'text': 		request.form['text'],
@@ -64,7 +68,6 @@ def add_book():
 @app.route('/addComment', methods=['POST', 'GET'])
 def add_comment():
 	try:
-		login.unauthorized()
 		cmnt = {'user': 	request.form['user'],
 				'subject':	request.form['subject'],
 				'details':	request.form['details'],
@@ -92,4 +95,3 @@ def login():
 
 if __name__ == "__main__":
 	app.run()
-

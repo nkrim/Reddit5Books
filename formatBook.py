@@ -17,5 +17,5 @@ def formatcomments(comments):
 	string=""
 	i=0
 	for comment in comments:
-		string=string+"comments["+str(i)"]=new Comment("+str(comment["start"])+","+str(comment["end"])+","+comment["subject"]+","+comment["details"]+");\n"
+		string=string+"comments["+str(i)+"]=new Comment("+str(comment["start"])+","+str(comment["end"])+","+comment["subject"]+","+comment["details"]+");\n"
 	return string
